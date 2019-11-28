@@ -1,6 +1,6 @@
 import re
 import pandas as pd
-from textblob import TextBlob
+from textblob import TextBlob, Word
 import nltk
 from nltk.corpus import stopwords
 
@@ -27,7 +27,7 @@ def clean_tags(df):
 
 def lowercase(df):
     """
-    remove all <...> occurrences
+    lowercase things
     """
     new_df = []
     for index, row in df.iterrows():
@@ -61,7 +61,7 @@ def clean_punctuation(df):
     remove all punctuation and special characters
     """
     
-    special_characters = {'.', ',', '<', '>', '(', ')', ':', ';', '[', ']', "'", '@', '"', '\\'}
+    special_characters = {'.', ',', '<', '>', '(', ')', ':', ';', '/', '[', ']', "'", '@', '"', '\\'}
     
     new_df = []
     for index, row in df.iterrows():
@@ -90,11 +90,74 @@ def remove_stopwords(df):
         for w in new_string:
             if w not in stopw:
                 words.append(w)
-         
-        print(words)    
+                
         new_df.append({
             'sentence': " ".join(words),
             'label': row['label']
         })
     
     return pd.DataFrame(new_df)
+
+def perform_translation(df):
+    """
+    perform translation of sentences. 
+    I don't know yet if it is better to perform it on a sentence level
+    or on a word level.
+    
+    DOESN'T WORK!! Google api doesn't accept too many requests.
+    """
+    languages_detected = []
+    counter_of_empty_sentences = 0
+    for index, row in df.iterrows():
+        sentence = row['sentence']
+        if len(sentence) > 3:
+            b = TextBlob(sentence)
+            if b.detect_language() != 'en':
+                languages_detected.append(b.detect_language())
+        else:
+            counter_of_empty_sentences += 1 
+            
+    
+def remove_numbers(df):
+    """
+    removes numbers, they are useless
+    """
+    new_df = []
+    for index, row in df.iterrows():
+        words = []
+        for w in row['sentence'].split(" "):
+            if not w.replace('.','', 1).isdigit():
+                words.append(w)
+    
+        new_df.append({
+            'sentence': " ".join(words),
+            'label': row['label']
+        })
+        
+    return pd.DataFrame(new_df)
+
+
+def lemmatize(df):
+    """
+    Lemmatize things:
+    in order to work: 
+    1) open an ipython3 shell on the correct virtualenv
+        `ipython3`
+    2) type: 
+        `import nltk`
+        `nltk.download('wordnet')`
+    3) exit()
+    """
+    new_df = []
+    for index, row in df.iterrows():
+        words = []
+        for w in row['sentence'].split(" "):
+            w = Word(w)
+            words.append(w.lemmatize())
+
+        new_df.append({
+            'sentence': " ".join(words),
+            'label': row['label']
+        })
+    return pd.DataFrame(new_df)
+        
