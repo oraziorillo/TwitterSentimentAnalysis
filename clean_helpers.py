@@ -8,53 +8,33 @@ def clean_tags(df):
     """
     remove all <...> occurrences
     """
-    new_df = []
-    for index, row in df.iterrows():
-        list_of_words = row['sentence'].split(" ")
-        new_list = []
-        for w in list_of_words:
-            tag = "^<.*>$"
-            if re.search(tag, w) is None:
-                if w != '':
-                    new_list.append(w)
-        new_df.append({
-            'sentence': " ".join(new_list),
-            'label': row['label']
-        })
-    
-    return pd.DataFrame(new_df)
+    tag = "^<.*>$"
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x:  " ".join(" ".join([ w if w != "" and re.search(tag, w) is None else "" for w in x.split(" ")]).split())),
+        'label': df.label
+    })
     
 
 def lowercase(df):
     """
     lowercase things
     """
-    new_df = []
-    for index, row in df.iterrows():
-        list_of_words = row['sentence'].split(" ")
-        new_list = []
-        for w in list_of_words:
-            new_list.append(w.lower())
-        new_df.append({
-            'sentence': " ".join(new_list),
-            'label': row['label']
-        })
-    
-    return pd.DataFrame(new_df)  
+    return pd.DataFrame({
+        "sentence": df.sentence.apply(lambda x: " ".join([i.lower() for i in x.split(" ")])),
+        "label": df.label
+    })
 
 def clean_new_line(df):
     """
     remove all \n
+    Careful here: are we sure that we have no \n and whitespace together?
+    We replace all occurrences of double whitespace with a single space!
     """
-    new_df = []
-    for index, row in df.iterrows():
-        new_string = "".join(row['sentence'].split("\n")[0:-1])
-        new_df.append({
-            'sentence': new_string,
-            'label': row['label']
-        })
-    
-    return pd.DataFrame(new_df)  
+    return pd.DataFrame({
+        "sentence": df.sentence.apply(lambda x: " ".join((" ".join(x.split("\n")[0:-1])).split())),  # We replace all occurrences of 2 and 3 whitespace with 1 whitespace!
+        "label": df.label    
+    })
+
 
 def clean_punctuation(df):
     """
@@ -63,40 +43,23 @@ def clean_punctuation(df):
     
     special_characters = {'.', ',', '<', '>', '(', ')', ':', ';', '/', '[', ']', "'", '@', '"', '\\'}
     
-    new_df = []
-    for index, row in df.iterrows():
-        words = []
-        new_string = row['sentence'].split(" ")
-        
-        for w in new_string:
-            if w not in special_characters:
-                words.append(w)
-         
-        new_df.append({
-            'sentence': " ".join(words),
-            'label': row['label']
-        })
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([ "" if i in special_characters else i
+                                                         for i in x.split(" ")]).split()) ),
+        'label': df['label']
+    })
     
-    return pd.DataFrame(new_df)
 
 
 def remove_stopwords(df):
     stopw = set(stopwords.words('english'))
-    new_df = []
-    for index, row in df.iterrows():
-        words = []
-        new_string = row['sentence'].split(" ")
-        
-        for w in new_string:
-            if w not in stopw:
-                words.append(w)
-                
-        new_df.append({
-            'sentence': " ".join(words),
-            'label': row['label']
-        })
-    
-    return pd.DataFrame(new_df)
+
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([ "" if i in stopw else i
+                                                         for i in x.split(" ")]).split()) ),
+        'label': df['label']
+    })
+
 
 def perform_translation(df):
     """
@@ -122,19 +85,12 @@ def remove_numbers(df):
     """
     removes numbers, they are useless
     """
-    new_df = []
-    for index, row in df.iterrows():
-        words = []
-        for w in row['sentence'].split(" "):
-            if not w.replace('.','', 1).isdigit():
-                words.append(w)
-    
-        new_df.append({
-            'sentence': " ".join(words),
-            'label': row['label']
-        })
-        
-    return pd.DataFrame(new_df)
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join( j if not j.isdigit() else "" for j in [ i.replace(".", "", 1)
+                                                         for i in x.split(" ")]).split()) ),
+        'label': df['label']
+    })
+
 
 
 def lemmatize(df):
@@ -148,16 +104,8 @@ def lemmatize(df):
         `nltk.download('wordnet')`
     3) exit()
     """
-    new_df = []
-    for index, row in df.iterrows():
-        words = []
-        for w in row['sentence'].split(" "):
-            w = Word(w)
-            words.append(w.lemmatize())
-
-        new_df.append({
-            'sentence': " ".join(words),
-            'label': row['label']
-        })
-    return pd.DataFrame(new_df)
-        
+    
+    return pd.DataFrame({
+        "sentence": df.sentence.apply(lambda x: " ".join([ Word(w).lemmatize() for w in x.split(" ")])),
+        "label": df.label
+    })
