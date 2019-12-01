@@ -3,6 +3,12 @@ import pandas as pd
 from textblob import TextBlob, Word
 import nltk
 from nltk.corpus import stopwords
+import matplotlib.pyplot as plt
+
+from tqdm.notebook import tqdm
+
+import spacy
+from spacy_langdetect import LanguageDetector
 
 def clean_tags(df):
     """
@@ -98,25 +104,30 @@ def remove_stopwords(df):
     
     return pd.DataFrame(new_df)
 
+
+
 def perform_translation(df):
     """
-    perform translation of sentences. 
-    I don't know yet if it is better to perform it on a sentence level
-    or on a word level.
-    
-    DOESN'T WORK!! Google api doesn't accept too many requests.
+    Up to now it just computes how many languages are present, and how often
     """
+    nlp = spacy.load('en')  # load english library (probably not necessary!)
+    nlp.add_pipe(LanguageDetector(), name='language_detector', last=True)  # Add the tranlator to the pipeline
     languages_detected = []
     counter_of_empty_sentences = 0
-    for index, row in df.iterrows():
+    for index, row in tqdm(df.iterrows()):
         sentence = row['sentence']
-        if len(sentence) > 3:
-            b = TextBlob(sentence)
-            if b.detect_language() != 'en':
-                languages_detected.append(b.detect_language())
-        else:
-            counter_of_empty_sentences += 1 
-            
+        doc = nlp(sentence)
+        languages_detected.append(doc._.language)
+        
+    language_df = pd.DataFrame(languages_detected)
+    print(language_df.head())
+    
+    print(language_df.groupby("language").count())
+    
+    # language_df.hist(column=['language'])
+    # In the meantime don't do anything
+    return df
+
     
 def remove_numbers(df):
     """
