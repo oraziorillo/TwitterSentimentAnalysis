@@ -3,4 +3,6 @@ Data
 __pycache__
 test_fasttext*.txt
 train_fasttext*.txt
+*.gz
+*.zip
 
