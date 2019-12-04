@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-# TwitterSentimentAnalysis
-=======
 # TwitterSentimentAnalysis
 
 ## Installation setup
@@ -18,3 +15,8 @@ in order to work properly, you need to install the following libraries.
 `pip install fasttext`
 `conda install -c conda-forge tqdm`
 `conda install scikit-learn`
+`conda install -c anaconda pandas`
+`conda install -c anaconda numpy`
+`conda install scikit-learn`
+`conda install -c conda-forge tqdm`
+
