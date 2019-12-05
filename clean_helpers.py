@@ -2,6 +2,7 @@ import re
 import pandas as pd
 from textblob import TextBlob, Word
 import nltk
+import gensim
 from nltk.corpus import stopwords
 
 def clean_tags(df):
@@ -121,3 +122,15 @@ def lemmatize(df):
         "sentence": df.sentence.apply(lambda x: " ".join([ Word(w).lemmatize() for w in x.split(" ")])),
         "label": df.label
     })
+
+
+def gensim_clean(df):
+    """
+    Do gensim simple_preprocess.
+    Performs a lot of cleaning 
+    """
+    return pd.DataFrame({
+        "sentence": df.sentence.apply(lambda x: " ".join(gensim.utils.simple_preprocess(x))),
+        "label": df.label
+    })
+    

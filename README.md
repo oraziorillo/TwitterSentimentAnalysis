@@ -19,4 +19,6 @@ in order to work properly, you need to install the following libraries.
 `conda install -c anaconda numpy`
 `conda install scikit-learn`
 `conda install -c conda-forge tqdm`
+`conda install gensim`
+
 
