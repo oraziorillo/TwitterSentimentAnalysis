@@ -65,7 +65,7 @@ def remove_saxon_genitive(df):
 
 def remove_stopwords(df):
     stopw = set(stopwords.words('english'))
-    print(len(stopw))
+    print("The number of scipy stopwords is {}".format(len(stopw)))
 
     return pd.DataFrame({
         'sentence': df.sentence.apply(lambda x: " ".join(" ".join([ "" if i in stopw else i
@@ -99,8 +99,7 @@ def remove_numbers(df):
     removes numbers, they are useless
     """
     return pd.DataFrame({
-        'sentence': df.sentence.apply(lambda x: " ".join(" ".join( j if not j.isdigit() else "" for j in [ i.replace(".", "", 1)
-                                                         for i in x.split(" ")]).split()) ),
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([el if re.search("^([-\.,/_\(\):x]?[0-9]+[-\.,/_\(\):x]?)+$", el) == None else "" for el in x.split()]).split()) ),  
         'label': df['label']
     })
 
@@ -128,9 +127,10 @@ def gensim_clean(df):
     """
     Do gensim simple_preprocess.
     Performs a lot of cleaning 
-    """
+    """    
+    
     return pd.DataFrame({
-        "sentence": df.sentence.apply(lambda x: " ".join(gensim.utils.simple_preprocess(x))),
+        "sentence": df.sentence.apply(lambda x: " ".join(gensim.utils.simple_preprocess(x, min_len=0, max_len=500))),
         "label": df.label
     })
     
