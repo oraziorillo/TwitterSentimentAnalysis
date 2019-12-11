@@ -3,3 +3,6 @@ Data
 __pycache__
 clean_data.csv
 lstm_links.txt
+test_fasttext*.txt
+train_fasttext*.txt
+
