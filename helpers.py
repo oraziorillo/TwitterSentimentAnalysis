@@ -1,5 +1,6 @@
 from nltk import ngrams
 import pandas as pd
+import numpy as np
 
 def create_labelled_file(name_file, train):
     """
@@ -31,3 +32,18 @@ def count_unique_ngrams(df, n):
     return len(df.sentence.apply(lambda x: [x for x in ngrams(x.split(), n)]).explode().unique())
 
 
+def build_unique_ngrams(df, n):
+    """
+    Count the number of ngrams
+    """
+    unique_ngrams = df['sentence'].apply(lambda x: [x for x in ngrams(x.split(), n)]).explode().unique()
+    
+    new_unique_ngrams = []
+    for el in unique_ngrams:
+        if isinstance(el, tuple):
+            string = ""
+            for item in el:
+                string += item + " "
+            new_unique_ngrams.append(string[:-1])
+    
+    return new_unique_ngrams
