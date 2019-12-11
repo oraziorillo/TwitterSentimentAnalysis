@@ -48,6 +48,20 @@ def clean_punctuation(df):
                                                          for i in x.split(" ")]).split()) ),
         'label': df['label']
     })
+
+
+def clean_punctuation_2(df):
+    """
+    remove all punctuation and special characters
+    """
+    
+    special_characters = {'.', ',', '<', '>', '(', ')', ':', ';', '/', '[', ']', "'", '@', '"', '\\', '!', '...', '..', '*', '<---'}
+    
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([ "" if i in special_characters else i
+                                                         for i in x.split(" ")]).split()) ),
+        'label': df['label']
+    })
     
 
 

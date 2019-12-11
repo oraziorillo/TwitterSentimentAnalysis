@@ -1,4 +1,5 @@
 Data
 .ipynb_checkpoints
 __pycache__
-
+clean_data.csv
+lstm_links.txt
