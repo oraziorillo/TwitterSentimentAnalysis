@@ -1,6 +1,7 @@
 from nltk import ngrams
 import pandas as pd
 import numpy as np
+from tensorflow.keras.utils import to_categorical
 
 def create_labelled_file(name_file, train):
     """
@@ -47,3 +48,37 @@ def build_unique_ngrams(df, n):
             new_unique_ngrams.append(string[:-1])
     
     return new_unique_ngrams
+
+
+def create_sentence_vectors(X, Y, word_vector_size, w2v_model):
+    """
+    X must be a vector of sentences
+    Y must be a vector of labels (1, 0)
+    word_vector_size is the size of the word vector (100-1000)
+    w2v model is the Word2Vec model trained in advance.
+    
+    the returned sentence_y and sentence_x may be shorter than X and Y.
+    This can happen in case no word in X is in our vocabulary.
+    (Only when it is computed the test set!)
+    
+    :returns sentence_x: a numpy array, with 1 array of size size_of_wordvector,
+                obtained by averaging the word vectors of every word in every sentence.
+    :returns sentence_y: the labels, encoded as vectors [1,0] or [0,1]
+    
+    """
+    sentence_x = []
+    sentence_y = []
+    for sent, label in zip(X, Y):
+        sentence_vector = np.zeros(word_vector_size) # Probably most common word, we should always find it
+        words_in_vocabulary = 0
+        for word in sent.split():
+            if word in w2v_model.wv.vocab:
+                sentence_vector += w2v_model.wv[word]  # wc[] is a numpy vector
+                words_in_vocabulary += 1
+        if words_in_vocabulary > 0:
+            sentence_x.append(sentence_vector / words_in_vocabulary)   # Take the average
+            sentence_y.append(label)
+    sentence_x = np.array(sentence_x)
+    sentence_y = to_categorical(np.array(sentence_y))
+    
+    return sentence_x, sentence_y
