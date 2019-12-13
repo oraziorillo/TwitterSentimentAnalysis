@@ -4,6 +4,7 @@ from textblob import TextBlob, Word
 import nltk
 import gensim
 from nltk.corpus import stopwords
+from pattern.en import spelling
 
 def clean_tags(df):
     """
@@ -134,3 +135,45 @@ def gensim_clean(df):
         "label": df.label
     })
     
+def reduce_lengthening(text):
+    """
+    This helper function takes any word with more than 2 repetitions of the same 
+    char (yaaaay for instance, has 4 a repeated), and returns the word with at most
+    2 repetitions.
+    Can be useful to make similar words fall together:
+    aaaaaah and aaah will both become aah for instance
+    
+    This comes from the fact that no english word has more than 2 characters repeated
+    together.
+    
+    ccciiiiiioooo will be cciioo (all occurrences of repeated chars will be truncated to 2)
+    
+    Code is taken from https://rustyonrampage.github.io/text-mining/2017/11/28/spelling-correction-with-python-and-nltk.html
+    """
+    pattern = re.compile(r"(.)\1{2,}")
+    return pattern.sub(r"\1\1", text)
+
+
+def clean_more_than_double_repeated_chars(df):
+    """
+    Do gensim simple_preprocess.
+    Performs a lot of cleaning 
+    """    
+    
+    return pd.DataFrame({
+        "sentence": df.sentence.apply(lambda x: " ".join([reduce_lengthening(w) for w in x.split()]) ),
+        "label": df.label
+    })
+
+
+def clean_spelling(df):
+    """ 
+    Still need to finish it, it has problems as
+    spelling.suggest yelds a generator, not a proper list.
+    """
+    return pd.DataFrame({
+        "sentence": df.sentence.apply(lambda x: " ".join([spelling.suggest(w)[0][0] if spelling.suggest(w)[0][1] > 0.99 else w for w in x.split()]) ),
+        "label": df.label
+    })
+    
+
