@@ -1,3 +1,5 @@
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import numpy as np
 import pandas as pd
 
@@ -14,13 +16,13 @@ from clean_helpers import *
 from data_handling import build_sentences
 
 
-parser = argparse.ArgumentParser(description='Optional app description')
+parser = argparse.ArgumentParser(description='This file creates a dataframe of cleaned sentences')
 
 parser.add_argument('--input_pos',
                     help='input file with positive tweets')
 parser.add_argument('--input_neg',
                     help='Input file with negative tweets')
-parser.add_argument('--output_df',
+parser.add_argument('--output_df_train',
                     help='Pickle file with df cleaned')
 parser.add_argument('--clean_methods', 
                     help='cleaning methods, can choose among: \n' + 
