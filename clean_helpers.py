@@ -100,11 +100,9 @@ def remove_numbers(df):
     removes numbers, they are useless
     """
     return pd.DataFrame({
-        'sentence': df.sentence.apply(lambda x: " ".join(" ".join( j if not j.isdigit() else "" for j in [ i.replace(".", "", 1)
-                                                         for i in x.split(" ")]).split()) ),
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([el if re.search("^([-\.,/_\(\):#x]?[0-9]+[-\.,/_\(\):x]?)+$", el) == None else "" for el in x.split()]).split()) ),  
         'label': df['label']
     })
-
 
 
 def lemmatize(df):
