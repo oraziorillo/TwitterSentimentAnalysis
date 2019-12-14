@@ -2,6 +2,7 @@ from nltk import ngrams
 import pandas as pd
 import numpy as np
 from tensorflow.keras.utils import to_categorical
+from tqdm import tqdm
 
 def create_labelled_file(name_file, train):
     """
@@ -69,7 +70,7 @@ def create_sentence_vectors(X, Y, word_vector_size, w2v_model):
     counter_of_zero_sentences = 0
     sentence_x = []
     sentence_y = []
-    for sent, label in zip(X, Y):
+    for sent, label in tqdm(zip(X, Y)):
         sentence_vector = np.zeros(word_vector_size) # Probably most common word, we should always find it
         words_in_vocabulary = 0
         for word in sent.split():

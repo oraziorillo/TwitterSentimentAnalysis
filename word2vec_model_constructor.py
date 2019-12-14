@@ -11,6 +11,8 @@ import multiprocessing
 
 from gensim.models import Word2Vec
 
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
 parser = argparse.ArgumentParser(description='Builds the word vector model')
 
 parser.add_argument('--train_pickle',
@@ -46,19 +48,7 @@ epochs = int(args.epochs)   # The number of epochs the word2vec model will be tr
 window = int(args.window)
 sg = int(args.sg) == 1
 
-
-
-# Create train_x and test_x sets (shuffle and do split)
-train_test_split = 0.8
-permut = np.random.permutation(df.shape[0])
-train_x = df.iloc[permut[: int(df.shape[0]*train_test_split)]]['sentence']
-train_y = df.iloc[permut[: int(df.shape[0]*train_test_split)]]['label']
-test_x = df.iloc[permut[int(df.shape[0]*train_test_split): ]]['sentence']
-test_y = df.iloc[permut[int(df.shape[0]*train_test_split): ]]['label']
-
-# convert -1 labels into 0
-train_y = train_y.where(train_y == 1, 0) 
-test_y = test_y.where(test_y == 1, 0)
+train_x = df['sentence']
 
 sentences = [row.split() for row in train_x]
 len(sentences)
