@@ -6,5 +6,7 @@ test_fasttext*.txt
 train_fasttext*.txt
 azure-ml
 test.ipynb
-Untitled.ipynb
+Untitled*.ipynb
 *.csv
+*.h5
+*.json
