@@ -5,6 +5,8 @@ import nltk
 import gensim
 from nltk.corpus import stopwords
 from pattern.en import spelling
+from nltk.stem import WordNetLemmatizer   # This lemmatizer I hope works better than the TextBlob one.
+import spacy  # For lemmatization.
 
 def clean_tags(df):
     """
@@ -120,6 +122,20 @@ def lemmatize(df):
     
     return pd.DataFrame({
         "sentence": df.sentence.apply(lambda x: " ".join([ Word(w).lemmatize() for w in x.split(" ")])),
+        "label": df.label
+    })
+
+
+def lemmatize_spacy(df):
+    """
+    Do lemmatization with spacy library, looks like it is working better than
+    TextBlob. Only thing, must be very careful with hashtags (they get split.)
+    Probably better doing some more eye check controls to see if everything is
+    OK. Other strange fact, it substitutes every pronoun as -PRON-
+    """
+    nlp = spacy.load('en', disable=['parser', 'ner'])   # Load the spacy nlp module, in english.
+    return pd.DataFrame({
+        "sentence": df.sentence.apply(lambda x: " ".join([token.lemma_ for token in nlp(x)]).replace("# ", "#")),
         "label": df.label
     })
 

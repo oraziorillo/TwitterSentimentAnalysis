@@ -15,6 +15,8 @@ from clean_helpers import *
 
 from data_handling import build_sentences
 
+from timeit import default_timer as timer
+
 
 parser = argparse.ArgumentParser(description='This file creates a dataframe of cleaned sentences')
 
@@ -26,10 +28,11 @@ parser.add_argument('--output_df_train',
                     help='Pickle file with df cleaned')
 parser.add_argument('--clean_methods', 
                     help='cleaning methods, can choose among: \n' + 
-                        "clean_new_line\n" +
-                        "lowercase\n" + "lemmatize, remove_stopwords" +
-                        "clean_punctuation clean_tags remove_numbers" +
-                        "remove_saxon_genitive, gensim_simple, more_than_double_rep",
+                        "clean_new_line, " +
+                        "lowercase, " + "lemmatize (textBlob one), remove_stopwords, " +
+                        "clean_punctuation, clean_tags, remove_numbers, " +
+                        "remove_saxon_genitive, gensim_simple, more_than_double_rep, " + 
+                        "lemmatize_spacy (better to use either this either textblob one, not both)",
                     nargs='+')
 
 
@@ -58,7 +61,8 @@ clean = {
     "remove_saxon_genitive": remove_saxon_genitive,
     "gensim_simple": gensim_clean,   # not a good idea to use it I think! It cleans everything which is not alphabetic (special char, numbers and so on)
     "more_than_double_rep": clean_more_than_double_repeated_chars,
-    "clean_spelling": clean_spelling
+    "clean_spelling": clean_spelling,
+    "lemmatize_spacy": lemmatize_spacy
 }
 
 
@@ -83,7 +87,10 @@ print("unique words = {}".format(count_unique_words(df)))
 # Perform all the cleaning options selected
 for clean_option in cleaning_options:
     counter_of_occurrences = 0
+    start = timer()
     df = clean[clean_option](df)
+    end = timer()
+    print("Time elapsed: {}".format(end - start))
     print(clean_option)
     print(df.head())
     print("unique words = {}".format(count_unique_words(df)))
@@ -91,6 +98,6 @@ for clean_option in cleaning_options:
     
 df.head()
 
-df.to_pickle(args.output_df)
+df.to_pickle(args.output_df_train)
 
-print("df pickle file correctly saved in {}".format(args.output_df))
+print("df pickle file correctly saved in {}".format(args.output_df_train))

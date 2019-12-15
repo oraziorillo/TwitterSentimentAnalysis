@@ -26,6 +26,7 @@ and I had to stick to 1.16.4
 `sudo apt-get install mysql-server`   these are dependencies of pattern
 `sudo apt-get install libmysqlclient-dev`   these are dependencies of pattern
 `pip install Pattern`
+`python -m textblob.download_corpora`
 
 
 # Pipeline
