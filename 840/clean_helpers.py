@@ -1,8 +1,5 @@
 import re
 import pandas as pd
-from textblob import TextBlob, Word
-import nltk
-from nltk.corpus import stopwords
 
 def clean_tags(df):
     """
@@ -14,16 +11,6 @@ def clean_tags(df):
         'label': df.label
     })
     
-
-def lowercase(df):
-    """
-    lowercase things
-    """
-    return pd.DataFrame({
-        "sentence": df.sentence.apply(lambda x: " ".join([i.lower() for i in x.split(" ")])),
-        "label": df.label
-    })
-
 
 def clean_new_line(df):
     """
@@ -63,38 +50,7 @@ def clean_punctuation_2(df):
                                                          for i in x.split(" ")]).split()) ),
         'label': df['label']
     })
-    
 
-
-def remove_stopwords(df):
-    stopw = set(stopwords.words('english'))
-
-    return pd.DataFrame({
-        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([ "" if i in stopw else i
-                                                         for i in x.split(" ")]).split()) ),
-        'label': df['label']
-    })
-
-
-def perform_translation(df):
-    """
-    perform translation of sentences. 
-    I don't know yet if it is better to perform it on a sentence level
-    or on a word level.
-    
-    DOESN'T WORK!! Google api doesn't accept too many requests.
-    """
-    languages_detected = []
-    counter_of_empty_sentences = 0
-    for index, row in df.iterrows():
-        sentence = row['sentence']
-        if len(sentence) > 3:
-            b = TextBlob(sentence)
-            if b.detect_language() != 'en':
-                languages_detected.append(b.detect_language())
-        else:
-            counter_of_empty_sentences += 1 
-            
     
 def remove_numbers(df):
     """
@@ -103,32 +59,4 @@ def remove_numbers(df):
     return pd.DataFrame({
         'sentence': df.sentence.apply(lambda x: " ".join(" ".join([el if re.search("^([-\.,/_\(\):#x]?[0-9]+[-\.,/_\(\):x]?)+$", el) == None else "" for el in x.split()]).split()) ),  
         'label': df['label']
-    })
-
-
-def lemmatize(df):
-    """
-    Lemmatize things:
-    in order to work: 
-    1) open an ipython3 shell on the correct virtualenv
-        `ipython3`
-    2) type: 
-        `import nltk`
-        `nltk.download('wordnet')`
-    3) exit()
-    """
-    
-    return pd.DataFrame({
-        "sentence": df.sentence.apply(lambda x: " ".join([ Word(w).lemmatize() for w in x.split(" ")])),
-        "label": df.label
-    })
-
-
-def clean_empty_sentences(df):
-    """
-    Substitutes all the empty sentences with a customized sequence of characters
-    """
-    return pd.DataFrame({
-        "sentence": df.sentence.apply(lambda x: re.sub("^ *$", "-", x)),
-        "label": df.label
     })

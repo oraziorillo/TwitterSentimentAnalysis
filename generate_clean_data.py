@@ -45,19 +45,19 @@ data = pd.concat([pos_data, neg_data])
 
 
 # Create a dataframe containing all the sentences in train_pos_full.txt and train_neg_full.txt labeled
-neg_sentences = []
-with open(input_file_neg, 'r') as f:
+pos_sentences_full = []
+with open(input_file_pos_full, 'r') as f:
     for sentence in f:
-        neg_sentences.append(sentence)
+        pos_sentences_full.append(sentence)
         
-test_sentences = []
-with open(input_file_test, 'r') as f:
+neg_sentences_full = []
+with open(input_file_neg_full, 'r') as f:
     for sentence in f:
-        test_sentences.append(sentence)
+        neg_sentences_full.append(sentence)
         
-pos_data_full = pd.DataFrame(pos_sentences, columns=['sentence'])
+pos_data_full = pd.DataFrame(pos_sentences_full, columns=['sentence'])
 pos_data_full['label'] = 1
-neg_data_full = pd.DataFrame(neg_sentences, columns=['sentence'])
+neg_data_full = pd.DataFrame(neg_sentences_full, columns=['sentence'])
 neg_data_full['label'] = 0
 
 full_data = pd.concat([pos_data_full, neg_data_full])
@@ -79,7 +79,7 @@ test_data.sentence.apply(lambda x: re.sub("^[0-9]+,", "", x))
 # Clean all the sentences in the dataframes
 for c in cleaning_actions:
     data = clean[c](data)
-    full_data = clean[c](data)
+    full_data = clean[c](full_data)
     test_data = clean[c](test_data)
 
     

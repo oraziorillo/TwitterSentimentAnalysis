@@ -5,6 +5,11 @@ requested:
 - keras
 - tensorflow 2.0
 - tf_hub 0.7
+- bert-for-tf2
+- sklearn
+- sentencepiece
+- tqdm
+- 
 
 
    

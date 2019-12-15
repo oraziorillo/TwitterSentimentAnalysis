@@ -45,7 +45,7 @@ json_file.close()
 model = model_from_json(loaded_model_json)
 
 # Load weights into new model
-model.load_weights("models/{}.h5".format(sys.argv[1])
+model.load_weights("models/{}.h5".format(model_name)
 print("Loaded model from disk")
 print(model.summary())
                    
