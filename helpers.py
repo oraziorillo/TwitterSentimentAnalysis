@@ -73,4 +73,8 @@ def get_ids(tokens, tokenizer, max_seq_length):
 
 def help_train_lstm():
     print("\n\tTo use this tool use the command:\
-            \n\t\tpython3 help_train_lstm.py <model_name> <number_of_epochs>")
+            \n\t\tpython3 help_train_lstm.py <number_of_epochs>")
+    
+def help_keep_training_lstm():
+    print("\n\tTo use this tool use the command:\
+            \n\t\tpython3 help_keep_training_lstm.py <model_name> <number_of_epochs>")

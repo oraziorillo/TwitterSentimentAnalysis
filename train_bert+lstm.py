@@ -1,31 +1,22 @@
-from helpers import help_keep_training_lstm
+from helpers import help_train_lstm
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, SpatialDropout1D
 from sklearn.model_selection import train_test_split
-from keras.models import model_from_json
 import pandas as pd
 import sys
 import re
 
 
-if len(sys.argv) != 3:
+if len(sys.argv) != 2:
     print("\n\tWrong number of arguments")
-    help_keep_training_lstm()
-    sys.exit(0)
-
-try:
-    model_name = sys.argv[1]
-    model_number = int(re.compile('[0-9]+$').findall(model_name)[0])
-except:
-    print("\n\tNot valid model name")
-    help_keep_training_lstm
+    help_train_lstm()
     sys.exit(0)
 
 try:
     epochs = int(sys.argv[2])
 except:
     print("\n\tNot valid number of epochs")
-    help_keep_training_lstm()
+    help_train_lstm()
     sys.exit(0)
 
 
@@ -35,22 +26,13 @@ batch_size = 128
 test_size = 0.10
 validation_size = 1000
 
-
-# Load json model
-json_file = open("models/{}.json".format(model_name), 'r')
-
-# Create model from json
-loaded_model_json = json_file.read()
-json_file.close()
-model = model_from_json(loaded_model_json)
-
-# Load weights into new model
-model.load_weights("models/{}.h5".format(sys.argv[1])
-print("Loaded model from disk")
-print(model.summary())
-                   
-# Compile model
+# Initialize lstm model
+model = Sequential()
+model.add(SpatialDropout1D(0.4))
+model.add(LSTM(lstm_out, dropout=0.2, recurrent_dropout=0.2))
+model.add(Dense(2,activation='softmax'))
 model.compile(loss = 'categorical_crossentropy', optimizer='adam',metrics = ['accuracy'])
+print(model.summary())
 
 # Import data
 X_df = pd.read_csv("Data/bert_sentence_embeddings_full.csv")
@@ -70,9 +52,8 @@ print("acc: %.2f" % (acc))
 
 # Serialize model to JSON
 model_json = model.to_json()
-with open("models/bert_lstm_{}.json".format(model_number + 1), "w") as json_file:
+with open("models/bert_lstm_0.json", "w") as json_file:
     json_file.write(model_json)
 # Serialize weights to HDF5
-model.save_weights("models/bert_lstm_{}.h5".format(model_number + 1))
-print("Saved model bert_lstm_{} to disk".format(model_number + 1))
-
+model.save_weights("models/bert_lstm_0.h5")
+print("Saved model bert_lstm_0 to disk")
