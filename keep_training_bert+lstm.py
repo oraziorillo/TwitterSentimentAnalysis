@@ -18,7 +18,7 @@ try:
     model_number = int(re.compile('[0-9]+$').findall(model_name)[0])
 except:
     print("\n\tNot valid model name")
-    help_keep_training_lstm
+    help_keep_training_lstm()
     sys.exit(0)
 
 try:

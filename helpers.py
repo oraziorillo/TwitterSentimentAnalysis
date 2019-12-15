@@ -78,3 +78,7 @@ def help_train_lstm():
 def help_keep_training_lstm():
     print("\n\tTo use this tool use the command:\
             \n\t\tpython3 help_keep_training_lstm.py <model_name> <number_of_epochs>")
+    
+def help_generate_predictions():
+    print("\n\tTo use this tool use the command:\
+            \n\t\tpython3 generate_predictions.py <model_name>")

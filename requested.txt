@@ -1,14 +1,10 @@
 requested:
 
-- matplotlib
 - pandas
-- textblob
 - numpy
-- torch
 - keras
-- "$python3
-   >>> import nltk
-   >>> nltk.download('stopwords')
-   >>> nltk.download('wordnet')"
+- tensorflow 2.0
+- tf_hub 0.7
+
 
    
