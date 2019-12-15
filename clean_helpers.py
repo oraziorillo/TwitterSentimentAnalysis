@@ -24,6 +24,7 @@ def lowercase(df):
         "label": df.label
     })
 
+
 def clean_new_line(df):
     """
     remove all \n

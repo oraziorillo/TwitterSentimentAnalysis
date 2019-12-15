@@ -1,9 +1,10 @@
 Data
 .ipynb_checkpoints
 __pycache__
-clean_data.csv
 lstm_links.txt
 test_fasttext*.txt
 train_fasttext*.txt
 azure-ml
 test.ipynb
+Untitled.ipynb
+*.csv
