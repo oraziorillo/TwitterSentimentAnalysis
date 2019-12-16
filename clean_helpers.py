@@ -64,6 +64,12 @@ def clean_punctuation_2(df):
         'label': df['label']
     })
     
+    
+def clean_punctuation_extra(df):
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: re.subn(" \W+ |^\W+ | \W+$", " ", x)),
+        'label': df['label']
+    })
 
 
 def remove_stopwords(df):
@@ -74,26 +80,6 @@ def remove_stopwords(df):
                                                          for i in x.split(" ")]).split()) ),
         'label': df['label']
     })
-
-
-def perform_translation(df):
-    """
-    perform translation of sentences. 
-    I don't know yet if it is better to perform it on a sentence level
-    or on a word level.
-    
-    DOESN'T WORK!! Google api doesn't accept too many requests.
-    """
-    languages_detected = []
-    counter_of_empty_sentences = 0
-    for index, row in df.iterrows():
-        sentence = row['sentence']
-        if len(sentence) > 3:
-            b = TextBlob(sentence)
-            if b.detect_language() != 'en':
-                languages_detected.append(b.detect_language())
-        else:
-            counter_of_empty_sentences += 1 
             
     
 def remove_numbers(df):
