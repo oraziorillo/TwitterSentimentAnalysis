@@ -46,7 +46,7 @@ df = pd.read_pickle(args.train_pickle)
 
 epochs = int(args.epochs)   # The number of epochs the word2vec model will be trained for.
 window = int(args.window)
-sg = int(args.sg) == 1
+sg = int(args.sg)
 
 train_x = df['sentence']
 
@@ -58,11 +58,11 @@ word_vector_size = int(args.word_vector_size)   # should be among 100-1000
 # logging.root.level = logging.ERROR   # Should reduce logging
 
 w2v_model = Word2Vec(min_count=1,
-                     window=10,      # Advised by Authors when using skip-gram
+                     window=window,      # Advised by Authors when using skip-gram
                      size=word_vector_size,
                      negative=5,
                      workers=4,
-                     sg=1)    ## Careful here: it should work better with sg=1 for big data
+                     sg=sg)    ## Careful here: it should work better with sg=1 for big data
 
 # Build the vocabulary (not sure why it is needed, but still)
 w2v_model.build_vocab(sentences, progress_per=100000)
