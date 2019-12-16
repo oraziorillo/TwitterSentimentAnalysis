@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import pickle
+import re
+import multiprocessing
 
 from helpers import count_unique_words, count_unique_ngrams, \
             build_unique_ngrams, create_sentence_vectors, create_sentence_vectors_submission
@@ -11,8 +13,6 @@ import sys
 import gensim   # Not sure whether it is better to use gensim or tensorflow :/
 import logging
 from gensim.models.phrases import Phrases, Phraser
-
-import multiprocessing
 
 from gensim.models import Word2Vec
  
@@ -37,20 +37,30 @@ parser.add_argument('--output_np_x',
                     required=True,
                     help='numpy array with cleaned sentences represented as vectors')
 
+parser.add_argument("--limit",
+                    required=False,
+                    help="if provided, the number of sentences of df to consider (may be unfeasable to take them all)")
+
 parser.add_argument('--output_np_y',
                     required=True,
                     help='numpy array with labels represented as categorical')
 
 args = parser.parse_args()
 
-w2v_model = Word2Vec.load(args.w2v_model)
+
+if re.match(r".+\.bin", args.w2v_model) != None:
+    w2v_model = gensim.models.KeyedVectors.load_word2vec_format(args.w2v_model, binary=True)
+else:
+    w2v_model = Word2Vec.load(args.w2v_model)
 
 word_vector_size = w2v_model.wv.vectors.shape[1]
 
 train_df = pd.read_pickle(args.df_cleaned_sentences) 
 
-x = train_df['sentence']
-y = train_df['label']
+limit = train_df.shape[0] if not args.limit else int(args.limit)
+
+x = train_df.iloc[:limit]['sentence']
+y = train_df.iloc[:limit]['label']
 
 #########################################
 ### Super important here ################
