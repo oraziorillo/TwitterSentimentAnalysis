@@ -68,9 +68,14 @@ def create_sentence_vectors(X, Y, word_vector_size, w2v_model):
     
     """
     counter_of_zero_sentences = 0
-    sentence_x = []
-    sentence_y = []
-    for sent, label in tqdm(zip(X, Y)):
+    sentence_x = np.empty( (len(X), word_vector_size) )  ## Initialize of the right dimension.
+    # The initial value 0 is totally fake.
+    sentence_y = np.empty(len(Y))
+    # avg_vector = np.mean(X, axis=0)
+    print("Computed the average vector")
+
+    for i, (sent, label) in tqdm(enumerate(zip(X, Y))):
+        # print(i)
         sentence_vector = np.zeros(word_vector_size) # Probably most common word, we should always find it
         words_in_vocabulary = 0
         for word in sent.split():
@@ -78,15 +83,16 @@ def create_sentence_vectors(X, Y, word_vector_size, w2v_model):
                 sentence_vector += w2v_model.wv[word]  # wc[] is a numpy vector
                 words_in_vocabulary += 1
         if words_in_vocabulary > 0:
-            sentence_x.append(sentence_vector / words_in_vocabulary)   # Take the average
-            sentence_y.append(label)
+            # print(sentence_vector / words_in_vocabulary)
+            sentence_x[i] = np.array(sentence_vector / words_in_vocabulary)   # Take the average
+            sentence_y[i] = label
         else:
             counter_of_zero_sentences += 1
-            sentence_x.append(sentence_vector)   # Do some pretty bad inference: append a zero vector. Maybe it is better to append the average of the column, or the median
-            sentence_y.append(label)
-    sentence_x = np.array(sentence_x)
+            sentence_vector = np.zeros(word_vector_size)
+            sentence_x[i] = sentence_vector    # Take the average
+            sentence_y[i] = label
     
-    sentence_y = to_categorical(np.array(sentence_y))
+    sentence_y = to_categorical(sentence_y)
     
     print("the number of zero sentences (the sentences which have 0 words in our vocabulary) is {}".
          format(counter_of_zero_sentences))
@@ -110,9 +116,12 @@ def create_sentence_vectors_submission(X, word_vector_size, w2v_model):
     :returns sentence_y: the labels, encoded as vectors [1,0] or [0,1]
     
     """
+
+    avg_vector = np.mean(X, axis=0)
+
     counter_of_zero_sentences = 0
-    sentence_x = []
-    for sent in X:
+    sentence_x = np.array(len(X))
+    for i, sent in enumerate(X):
         sentence_vector = np.zeros(word_vector_size) # Probably most common word, we should always find it
         words_in_vocabulary = 0
         for word in sent.split():
@@ -120,13 +129,18 @@ def create_sentence_vectors_submission(X, word_vector_size, w2v_model):
                 sentence_vector += w2v_model.wv[word]  # wc[] is a numpy vector
                 words_in_vocabulary += 1
         if words_in_vocabulary > 0:
-            sentence_x.append(sentence_vector / words_in_vocabulary)   # Take the average
+            sentence_x[i] = (sentence_vector / words_in_vocabulary)   # Take the average
         else:
+            sentence_vector = avg_vector.copy()   # Append the average vector, better than a vector of zeros!
             counter_of_zero_sentences += 1
-            sentence_x.append(sentence_vector)   # Do some pretty bad inference: append a zero vector. Maybe it is better to append the average of the column, or the median
-    sentence_x = np.array(sentence_x)
-    
+            sentence_x[i] = (sentence_vector)   # Do some pretty bad inference: append a zero vector. Maybe it is better to append the average of the column, or the median
     
     print("the number of zero sentences (the sentences which have 0 words in our vocabulary) is {}".
          format(counter_of_zero_sentences))
     return sentence_x
+
+
+def compute_chi_square(df):
+    """
+    This method returns the chi square value for each word
+    """
