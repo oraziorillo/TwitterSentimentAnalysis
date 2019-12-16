@@ -6,53 +6,10 @@ from collections import Counter
 import sys
 import os
 
-os.path.dirname('..')
+os.chdir('..')
 
-input_file_pos = 'Data/train_pos_full.txt'
-input_file_neg = 'Data/train_neg_full.txt'
-input_file_test = 'Data/test_data.txt'
-
-pos_sentences = []
-with open(input_file_pos, 'r') as f:
-    for sentence in f:
-        pos_sentences.append(sentence)
-        
-neg_sentences = []
-with open(input_file_neg, 'r') as f:
-    for sentence in f:
-        neg_sentences.append(sentence)
-
-test_sentences = []
-with open(input_file_test, 'r') as f:
-    for sentence in f:
-        test_sentences.append(sentence)
-
-pos_data = pd.DataFrame(pos_sentences, columns=['sentence'])
-pos_data['label'] = 1
-neg_data = pd.DataFrame(neg_sentences, columns=['sentence'])
-neg_data['label'] = -1
-test_data = pd.DataFrame(test_sentences, columns=['sentence'])
-test_data['label'] = 0
-
-# Drop the indexes at the beginning of the sentences
-test_data.sentence.apply(lambda x: re.sub("^[0-9]+,", "", x))
-
-data = pd.concat([pos_data, neg_data])
-
-# Specify here what cleaning functions you want to use
-cleaning_actions = ['clean_new_line', 'clean_tags', 'clean_punctuation', \
-                    'remove_numbers']
-
-clean = {
-    "clean_new_line": clean_new_line,
-    "clean_punctuation": clean_punctuation,
-    "clean_tags" : clean_tags,
-    "remove_numbers": remove_numbers,
-}
-
-for c in cleaning_actions:
-    data = clean[c](data)
-    test_data = clean[c](test_data)
+data = pd.read_csv('Data/clean_full_data.csv')
+test_data = pd.read_csv('Data/clean_test_data.csv')
 
 all_text_clean = ' '.join(list(data['sentence']))
 
@@ -65,6 +22,8 @@ total_words = len(words)
 sorted_words = count_words.most_common(total_words)
 
 vocab_to_int = {w:i for i, (w,c) in enumerate(sorted_words)}
+
+print('len(vocab_to_int) =', len(vocab_to_int))
 
 encoded_sentences = []
 encoded_test_sentences = []
