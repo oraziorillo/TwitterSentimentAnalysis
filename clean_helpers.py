@@ -6,7 +6,10 @@ import gensim
 from nltk.corpus import stopwords
 from pattern.en import spelling
 from nltk.stem import WordNetLemmatizer   # This lemmatizer I hope works better than the TextBlob one.
+
 import spacy  # For lemmatization.
+
+from nltk.tokenize import TweetTokenizer  # This is used to tokenize the second dataset.
 
 def clean_tags(df):
     """
@@ -35,7 +38,7 @@ def clean_new_line(df):
     We replace all occurrences of double whitespace with a single space!
     """
     return pd.DataFrame({
-        "sentence": df.sentence.apply(lambda x: " ".join((" ".join(x.split("\n")[0:-1])).split())),  # We replace all occurrences of 2 and 3 whitespace with 1 whitespace!
+        "sentence": df.sentence.apply(lambda x: " ".join((" ".join(x.split("\n")[:])).split())),  # We replace all occurrences of 2 and 3 whitespace with 1 whitespace!
         "label": df.label    
     })
 
@@ -193,3 +196,45 @@ def clean_spelling(df):
     })
     
 
+    
+def tokenize_tweets(df):
+    tknzr = TweetTokenizer()
+    return pd.DataFrame({
+        "sentence": df.sentence.apply(lambda x: " ".join(" ".join(tknzr.tokenize(x)).split())),
+        "label": df.label
+    })
+
+def clean_punctuation_2(df):
+    """
+    remove all punctuation and special characters
+    """
+    
+    special_characters = {'.', ',', '<', '>', '(', ')', ':', ';', '/', '[', ']', "'", '@', '"', '\\', '!', '...', '..', '*', '<---'}
+    
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([ "" if i in special_characters else i
+                                                         for i in x.split(" ")]).split()) ),
+        'label': df['label']
+    })
+
+def remove_urls(df):
+    """
+    Remove all http https urls
+    """
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([el if re.search("http.*", el) == None else "" for el in x.split()]).split()) ),  
+        'label': df['label']
+    })
+
+    
+def remove_ats(df):
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([el if re.search("^@", el) == None else "" for el in x.split()]).split()) ),  
+        'label': df['label']
+    })
+
+def remove_ampersand(df):
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([el if re.search("^&", el) == None else "" for el in x.split()]).split()) ),  
+        'label': df['label']
+    })
