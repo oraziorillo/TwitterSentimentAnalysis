@@ -58,7 +58,7 @@ tqdm.pandas()
 embedding_series = data.sentence.progress_apply(lambda s: embed(s)[0]).to_numpy()
 embeddings = pd.DataFrame.from_records(embedding_series)
 
-embeddings.to_csv("Data/bert_sentence_embeddings_full.csv".format(pn), index=False)
+embeddings.to_csv("Data/bert_sentence_embeddings_full.csv", index=False)
 
 
 

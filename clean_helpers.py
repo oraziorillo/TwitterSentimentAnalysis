@@ -4,7 +4,6 @@ from textblob import TextBlob, Word
 import nltk
 import gensim
 from nltk.corpus import stopwords
-from pattern.en import spelling
 from nltk.stem import WordNetLemmatizer   # This lemmatizer I hope works better than the TextBlob one.
 
 import spacy  # For lemmatization.
@@ -194,7 +193,6 @@ def clean_spelling(df):
         "sentence": df.sentence.apply(lambda x: " ".join([spelling.suggest(w)[0][0] if spelling.suggest(w)[0][1] > 0.99 else w for w in x.split()]) ),
         "label": df.label
     })
-    
 
     
 def tokenize_tweets(df):
@@ -203,6 +201,7 @@ def tokenize_tweets(df):
         "sentence": df.sentence.apply(lambda x: " ".join(" ".join(tknzr.tokenize(x)).split())),
         "label": df.label
     })
+
 
 def clean_punctuation_2(df):
     """
@@ -216,6 +215,7 @@ def clean_punctuation_2(df):
                                                          for i in x.split(" ")]).split()) ),
         'label': df['label']
     })
+
 
 def remove_urls(df):
     """
@@ -233,8 +233,19 @@ def remove_ats(df):
         'label': df['label']
     })
 
+
 def remove_ampersand(df):
     return pd.DataFrame({
         'sentence': df.sentence.apply(lambda x: " ".join(" ".join([el if re.search("^&", el) == None else "" for el in x.split()]).split()) ),  
         'label': df['label']
+    })
+
+
+def clean_empty_sentences(df):
+    """
+    Substitutes all the empty sentences with a customized sequence of characters
+    """
+    return pd.DataFrame({
+        "sentence": df.sentence.apply(lambda x: re.sub("^ *$", "-", x)),
+        "label": df.label
     })
