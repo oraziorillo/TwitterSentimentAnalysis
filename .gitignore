@@ -1,8 +1,15 @@
 Data
 .ipynb_checkpoints
 __pycache__
+lstm_links.txt
 test_fasttext*.txt
 train_fasttext*.txt
 *.gz
 *.zip
 
+azure-ml
+test.ipynb
+Untitled*.ipynb
+*.csv
+*.h5
+*.json

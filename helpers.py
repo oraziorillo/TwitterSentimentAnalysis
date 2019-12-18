@@ -1,8 +1,65 @@
-from nltk import ngrams
 import pandas as pd
 import numpy as np
 from tensorflow.keras.utils import to_categorical
 from tqdm import tqdm
+
+from nltk import ngrams
+import numpy as np
+from tensorflow.keras.utils import to_categorical
+from tqdm import tqdm
+
+# -------------------------------------------------------------------------------------------------------------------
+# Bert stuff
+# -------------------------------------------------------------------------------------------------------------------
+
+def help_bert_sentence_embeddings():
+    print("\n\tTo use this tool use the command:\
+            \n\t\tpython3 bert_sentence_embeddings.py <sentences_to_embed.csv>")
+    
+
+def get_masks(tokens, max_seq_length):
+    """Mask for padding"""
+    if len(tokens)>max_seq_length:
+        raise IndexError("Token length more than max seq length!")
+    return [1]*len(tokens) + [0] * (max_seq_length - len(tokens))
+
+
+def get_segments(tokens, max_seq_length):
+    """Segments: 0 for the first sequence, 1 for the second"""
+    if len(tokens)>max_seq_length:
+        raise IndexError("Token length more than max seq length!")
+    segments = []
+    current_segment_id = 0
+    for token in tokens:
+        segments.append(current_segment_id)
+        if token == "[SEP]":
+            current_segment_id = 1
+    return segments + [0] * (max_seq_length - len(tokens))
+
+
+def get_ids(tokens, tokenizer, max_seq_length):
+    """Token ids from Tokenizer vocab"""
+    token_ids = tokenizer.convert_tokens_to_ids(tokens)
+    input_ids = token_ids + [0] * (max_seq_length-len(token_ids))
+    return input_ids
+
+
+# -------------------------------------------------------------------------------------------------------------------
+# LSTM stuff
+# -------------------------------------------------------------------------------------------------------------------
+
+def help_train_lstm():
+    print("\n\tTo use this tool use the command:\
+            \n\t\tpython3 help_train_lstm.py <number_of_epochs>")
+    
+def help_keep_training_lstm():
+    print("\n\tTo use this tool use the command:\
+            \n\t\tpython3 help_keep_training_lstm.py <model_name> <number_of_epochs>")
+    
+def help_generate_predictions():
+    print("\n\tTo use this tool use the command:\
+            \n\t\tpython3 generate_predictions.py <model_name>")
+
 
 def create_labelled_file(name_file, train):
     """
@@ -103,6 +160,10 @@ def create_sentence_vectors(X, Y, word_vector_size, w2v_model):
 def create_sentence_vectors_submission(X, word_vector_size, w2v_model):
     """
     X must be a vector of sentences
+<<<<<<< HEAD
+=======
+    Y must be a vector of labels (1, 0)
+>>>>>>> master
     word_vector_size is the size of the word vector (100-1000)
     w2v model is the Word2Vec model trained in advance.
     
@@ -136,6 +197,7 @@ def create_sentence_vectors_submission(X, word_vector_size, w2v_model):
     
     print("the number of zero sentences (the sentences which have 0 words in our vocabulary) is {}".
          format(counter_of_zero_sentences))
+<<<<<<< HEAD
     return sentence_x
 
 
@@ -206,3 +268,6 @@ def create_sentence_chi2_vectors(x, y, word_vector_size, w2v_model, chi2_df):
     # print("the number of zero sentences (the sentences which have 0 words in our vocabulary) is {}".
     #      format(counter_of_zero_sentences))
     return sentence_x, sentence_y
+=======
+    return sentence_x
+>>>>>>> master
