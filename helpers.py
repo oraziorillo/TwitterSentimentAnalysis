@@ -160,10 +160,7 @@ def create_sentence_vectors(X, Y, word_vector_size, w2v_model):
 def create_sentence_vectors_submission(X, word_vector_size, w2v_model):
     """
     X must be a vector of sentences
-<<<<<<< HEAD
-=======
     Y must be a vector of labels (1, 0)
->>>>>>> master
     word_vector_size is the size of the word vector (100-1000)
     w2v model is the Word2Vec model trained in advance.
     
@@ -197,7 +194,6 @@ def create_sentence_vectors_submission(X, word_vector_size, w2v_model):
     
     print("the number of zero sentences (the sentences which have 0 words in our vocabulary) is {}".
          format(counter_of_zero_sentences))
-<<<<<<< HEAD
     return sentence_x
 
 
@@ -268,6 +264,3 @@ def create_sentence_chi2_vectors(x, y, word_vector_size, w2v_model, chi2_df):
     # print("the number of zero sentences (the sentences which have 0 words in our vocabulary) is {}".
     #      format(counter_of_zero_sentences))
     return sentence_x, sentence_y
-=======
-    return sentence_x
->>>>>>> master
