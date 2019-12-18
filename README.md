@@ -83,7 +83,11 @@ and follow the instructions. In particular, you will be able to select the model
 to compute the word embeddings. Moreover, a `--limit` argument can be provided during testing (it easily explodes with memory consumption,
 mainly when working with Google's model which by itself demands several - around 3 - GigaBytes of memory).
 
-A different approach has been used, which is 
+A different approach for computing the sentence embedding has been used: instead of averaging the word embeddings in every sentence,
+we take advantage of the probability measure given by the *chi2* (chi squared). This measure, is computed over the entire dataset using
+the formula ***, and provides a numerical measure to judge whether the presence of a term in a sentence is dependent or independent from 
+a certain label. We may assume, for instance, that the smile ;) will be highly dependent on the presence of the label :). And the same 
+can be said for terms like *love*, *happy* and so on. If a word then has a high chi2 value, it means 
 
 
 The sentence representation vectors, then, are fed into a dense neural network which tries to predict the correct labels (1, 0 for positive or negative)
