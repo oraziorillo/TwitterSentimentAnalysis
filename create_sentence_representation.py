@@ -76,6 +76,8 @@ np.save(args.output_np_x, sentence_x)
 
 np.save(args.output_np_y, sentence_y)
 
+print("vectors saved")
+
 
 
 
