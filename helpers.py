@@ -189,7 +189,7 @@ def create_sentence_chi2_vectors(x, y, word_vector_size, w2v_model, chi2_df):
         words_in_vocabulary = 0
         tot_chi2 = 0
         for word in sent.split():
-            if word in w2v_model.wv.vocab and not chi2_df.loc[word].isna()[0] :
+            if word in w2v_model.wv.vocab and word in chi2_df.index and not chi2_df.loc[word].isna()[0] :
                 sentence_vector += (w2v_model.wv[word] * chi2_df.loc[word][0])  # we scale the word vector by its chi2 value
                 words_in_vocabulary += 1
                 tot_chi2 += chi2_df.loc[word][0]
@@ -201,7 +201,7 @@ def create_sentence_chi2_vectors(x, y, word_vector_size, w2v_model, chi2_df):
             sentence_vector = avg_vector        # Now we take the average computed above.
             sentence_x[i] = sentence_vector    # Take the average or a zero vector! must decide which is best
     
-    sentence_y = to_categorical(sentence_y)
+    sentence_y = to_categorical(sentence_y)    # Convert to categorical
     
     # print("the number of zero sentences (the sentences which have 0 words in our vocabulary) is {}".
     #      format(counter_of_zero_sentences))
