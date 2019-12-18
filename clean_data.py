@@ -31,7 +31,8 @@ parser.add_argument('--clean_methods',
                         "clean_new_line, " +
                         "lowercase, " + "lemmatize (textBlob one), remove_stopwords, " +
                         "clean_punctuation, clean_tags, remove_numbers, " +
-                        "remove_saxon_genitive, gensim_simple, more_than_double_rep, " + 
+                        "remove_saxon_genitive, gensim_simple, more_than_double_rep, " +
+                        "remove_@, remove_urls" 
                         "lemmatize_spacy (better to use either this either textblob one, not both)",
                     nargs='+')
 
@@ -62,7 +63,9 @@ clean = {
     "gensim_simple": gensim_clean,   # not a good idea to use it I think! It cleans everything which is not alphabetic (special char, numbers and so on)
     "more_than_double_rep": clean_more_than_double_repeated_chars,
     "clean_spelling": clean_spelling,
-    "lemmatize_spacy": lemmatize_spacy
+    "lemmatize_spacy": lemmatize_spacy,
+    "remove_@": remove_ats,
+    "remove_urls": remove_urls
 }
 
 
