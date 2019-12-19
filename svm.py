@@ -1,26 +1,25 @@
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.svm import LinearSVC
 
 
-def naive_bayes_model(training_data, training_labels, n):
+def svm_model(training_data, training_labels):
     """
-    Create a naive Bayes classifier pipeline with maximum maximum length of n-gram given.
+    Create an SVM classifier pipeline.
 
-    :param pandas.core.series.Series training_data: The data the naive Bayes classifier should be trained on
+    :param pandas.core.series.Series training_data: The data the SVM should be trained on
     :param pandas.core.series.Series training_labels: The labels corresponding to the given training data
-    :param int n: The maximum value of n in the sense of n-grams
     """
     classifier = Pipeline([
-        ('vect', CountVectorizer(ngram_range=(1,n))), #add arguments to CountVectorizer for more efficiency
+        ('vect', CountVectorizer()), #add arguments to CountVectorizer for more efficiency
         ('tfidf', TfidfTransformer(sublinear_tf=False)),
-        ('clf', MultinomialNB()),
+        ('clf', LinearSVC()),
     ])
     classifier.fit(training_data, training_labels)
     return classifier
 
 
-def naive_bayes_predict(classifier, test_data):
+def svm_predict(classifier, test_data):
     """
     Predict the labels of the given test data with the given classifier pipeline.
     

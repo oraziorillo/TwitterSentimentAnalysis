@@ -4,6 +4,8 @@ __pycache__
 lstm_links.txt
 test_fasttext*.txt
 train_fasttext*.txt
+*.gz
+*.zip
 azure-ml
 test.ipynb
 Untitled*.ipynb
@@ -11,4 +13,3 @@ Untitled*.ipynb
 *.h5
 *.json
 test_venv
-trained_models

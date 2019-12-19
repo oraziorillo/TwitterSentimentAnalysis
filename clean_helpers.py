@@ -79,26 +79,6 @@ def remove_stopwords(df):
     })
 
 
-def perform_translation(df):
-    """
-    perform translation of sentences. 
-    I don't know yet if it is better to perform it on a sentence level
-    or on a word level.
-    
-    DOESN'T WORK!! Google api doesn't accept too many requests.
-    """
-    languages_detected = []
-    counter_of_empty_sentences = 0
-    for index, row in df.iterrows():
-        sentence = row['sentence']
-        if len(sentence) > 3:
-            b = TextBlob(sentence)
-            if b.detect_language() != 'en':
-                languages_detected.append(b.detect_language())
-        else:
-            counter_of_empty_sentences += 1 
-            
-    
 def remove_numbers(df):
     """
     removes numbers, they are useless
@@ -112,16 +92,9 @@ def remove_numbers(df):
 
 def lemmatize(df):
     """
-    Lemmatize things:
-    in order to work: 
-    1) open an ipython3 shell on the correct virtualenv
-        `ipython3`
-    2) type: 
-        `import nltk`
-        `nltk.download('wordnet')`
-    3) exit()
+    Lemmatize tokens
     """
-    
+    nltk.download('wordnet')
     return pd.DataFrame({
         "sentence": df.sentence.apply(lambda x: " ".join([ Word(w).lemmatize() for w in x.split(" ")])),
         "label": df.label
@@ -248,4 +221,16 @@ def clean_empty_sentences(df):
     return pd.DataFrame({
         "sentence": df.sentence.apply(lambda x: re.sub("^ *$", "-", x)),
         "label": df.label
+    })
+
+
+def clean_with_vocabulary_of_model(df, vocabulary):
+    """
+    Given a model, it returns all the words in every sentence which are present in the vocabulary of the model
+    :param df: the dataframe, with sentence and label column
+    :param vocabulary: the vocabulary of the words known to the model.
+    """
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([el if el in vocabulary else "" for el in x.split()]).split()) ),  
+        'label': df['label']
     })
