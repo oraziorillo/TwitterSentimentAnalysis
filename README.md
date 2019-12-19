@@ -68,11 +68,11 @@ In order to try out the naive Bayes approach, type `python3 naive_bayes_template
 In order to try out the SVM approach, type `python3 svm_template.py --help` and follow the instructions. In case you decide to test locally, the accuracy when using an SVM will get printed. If you do not test locally, a submission file will be constructed.
 
 # Feature selection
-With feature selection one wishes to extract a subset of the features and discard the rest of them in the training process. The utility measure that we use is the \(\mathcal{\chi}^2\)-test. In order to try out this test, run `chi2test_template.py`. This will consider the test for naive Bayes for unigrams only, and for uni- and digrams only. The resulting graph for the unigrams only will be
+With feature selection one wishes to extract a subset of the features and discard the rest of them in the training process. The utility measure that we use is the chi2-test. In order to try out this test, run `chi2test_template.py`. This will consider the test for naive Bayes for unigrams only, and for uni- and digrams only. The resulting graph for the unigrams only will be
 ![alt text](chi2_nb_uni.png)
 and the resulting graph for the uni- and digrams only is
 ![alt text](chi2_nb_di.png)
-The file also considers the $\mathcal{\chi}^2$-test for SVM for unigrams only. The resulting graph will be
+The file also considers the chi2-test for SVM for unigrams only. The resulting graph will be
 ![alt text](chi2_svm.png)
 
 # Word Embedding Averaging 
