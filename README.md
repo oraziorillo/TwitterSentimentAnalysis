@@ -33,11 +33,6 @@ Another incompatibility issue found is when running Keras Neural Nets on GPU or 
 - `python -m textblob.download_corpora`
 - `pip install argparse`
 
-# Naive Bayes 
-
-
-# Support Vector Machine
-
 # Cleaning primitives
 In order to clean the dataset we implemented some functions present in the file
 `clean_helpers.py`. 
@@ -65,6 +60,20 @@ Nor the *Word2Vec*, nor the *GloVe* model showed a clear improvement in performa
 
 Before running the module `clean_data.py`, be sure to have a directory called `models`, which contains both the pre-trained Glove and Word2Vec embeddings.
 They can be downloaded from [1] and [2]
+
+# Naive Bayes 
+In order to try out the naive Bayes approach, type `python3 naive_bayes_template.py --help` and follow the instructions. In case you decide to test locally, a graph of accuracy for maximum length of n-grams will be constructed. This might take a while because the results are considered for values of n up to 10. If you do not test locally, a submission file will be constructed.
+
+# Support Vector Machine
+In order to try out the SVM approach, type `python3 svm_template.py --help` and follow the instructions. In case you decide to test locally, the accuracy when using an SVM will get printed. If you do not test locally, a submission file will be constructed.
+
+# Feature selection
+With feature selection one wishes to extract a subset of the features and discard the rest of them in the training process. The utility measure that we use is the $\mathcal{\chi}^2$-test. In order to try out this test, run `chi2test_template.py`. This will consider the test for naive Bayes for unigrams only, and for uni- and digrams only. The resulting graph for the unigrams only will be
+![alt text](chi2_nb_uni.png)
+and the resulting graph for the uni- and digrams only is
+![alt text](chi2_nb_di.png)
+The file also considers the $\mathcal{\chi}^2$-test for SVM for unigrams only. The resulting graph will be
+![alt text](chi2_svm.png)
 
 # Word Embedding Averaging 
 One of the approaches tried is the Word Embedding averaging. It consists in embedding the sentences by averaging the word vectors of each word present in every sentence. After having embedded the sentences, a dense neural network is applied to the sentence vector, which classifies the tweets into positive and negative classes.
