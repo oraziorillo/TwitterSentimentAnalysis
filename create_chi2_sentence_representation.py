@@ -11,7 +11,7 @@ from helpers import count_unique_words, count_unique_ngrams, \
 
 import sys
 
-import gensim   # Not sure whether it is better to use gensim or tensorflow :/
+import gensim
 import logging
 from gensim.models.phrases import Phrases, Phraser
 
@@ -55,20 +55,20 @@ args = parser.parse_args()
 
 #### CAREFUL HERE
 """
-Some chi2 values are Nan, probably as the words don't appear enough often to be in every category (0,0) (0,1) (1,0) (1,1)
-(check Text classification and Naive Bayes to understand what the classes mean, Catinca's Stanford paper, no link for it :/)
-You can just drop those words, they are only 500 out of 60k words in the vocabulary.
+Some chi2 values are Nan, probably as the words don't appear enough often to be 
+in every category (0,0) (0,1) (1,0) (1,1)
+(check Text classification and Naive Bayes to understand what the classes mean, 
+https://nlp.stanford.edu/IR-book/pdf/13bayes.pdf)
+You can just drop those words, they are only 500 out of about 60k-100k words in the vocabulary.
 """
 
 
-if re.match(r".+\.bin", args.w2v_model) != None:
-    # Load google big word2vec model, dunno why but it is in a very strange format
+if re.match(r".*GoogleNews-vectors-negative300", args.w2v_model) != None:
+    # Load google big word2vec model, dunno why but it is in a very strange format :/
     w2v_model = gensim.models.KeyedVectors.load_word2vec_format(args.w2v_model, binary=True)
 else:
     # Load any other normal word2vec model
     w2v_model = Word2Vec.load(args.w2v_model)
-
-word_vector_size = w2v_model.wv.vectors.shape[1]   # the word embedding size, 200-300 usually
 
 train_df = pd.read_pickle(args.df_cleaned_sentences)   # Read the dataframe with sentences
 
@@ -88,7 +88,7 @@ y = train_df.iloc[:limit]['label']
 # We need to set labels from the -1, 1 representation into the 0,1 representation
 y = y.where(y == 1, 0) 
 
-sentence_x, sentence_y = create_sentence_chi2_vectors(x, y, word_vector_size, w2v_model, chi2_df)   ## Compute the sentence embedding
+sentence_x, sentence_y = create_sentence_chi2_vectors(x, y, w2v_model, chi2_df)   ## Compute the sentence embedding
 
 np.save(args.output_np_x, sentence_x)
 
