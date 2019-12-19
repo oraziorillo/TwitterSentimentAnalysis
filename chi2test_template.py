@@ -14,6 +14,8 @@ from sklearn.feature_selection import chi2
 from tqdm import tqdm
 from matplotlib.ticker import ScalarFormatter
 
+from data_handling import build_sentences
+
 from clean_helpers import *
 
 sys.path.append('../')
@@ -28,7 +30,7 @@ def chi2_test_naive_bayes(n, k):
     """
     text_clf = Pipeline([
         ('vect', CountVectorizer(ngram_range=(1,n))),
-        ('chi2', SelectKBest(chi2, k=k_value)),
+        ('chi2', SelectKBest(chi2, k=k)),
         ('tfidf', TfidfTransformer(use_idf=True, sublinear_tf=True)),
         ('clf', MultinomialNB()),
     ])    
@@ -43,7 +45,7 @@ def chi2_test_svm(k):
     """
     text_clf = Pipeline([
         ('vect', CountVectorizer()),
-        ('chi2', SelectKBest(chi2, k=k_value)),
+        ('chi2', SelectKBest(chi2, k=k)),
         ('tfidf', TfidfTransformer(use_idf=True, sublinear_tf=True)),
         ('clf', LinearSVC()),
     ])    
@@ -99,7 +101,7 @@ def chi2_test(training_data, training_labels, testing_data, testing_labels):
     plt.show()
 
 
-if _name=="main_":
+if __name__=="__main__":
     # Specify here what cleaning functions you want to use
     cleaning_options = ['clean_new_line', 'clean_tags', 'lowercase', \
                         'clean_punctuation', 'remove_stopwords', 'remove_numbers', 'lemmatize']
