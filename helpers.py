@@ -171,7 +171,7 @@ def create_sentence_vectors_submission(X, word_vector_size, w2v_model):
     """
 
     counter_of_zero_sentences = 0
-    sentence_x = np.array(len(X))
+    sentence_x = np.empty( (len(X), word_vector_size) )
     for i, sent in enumerate(X):
         sentence_vector = np.zeros(word_vector_size)
         words_in_vocabulary = 0
@@ -194,29 +194,27 @@ def create_sentence_vectors_submission(X, word_vector_size, w2v_model):
     return sentence_x
 
 
-def create_sentence_chi2_vectors(x, y, word_vector_size, w2v_model, chi2_df):
+def create_sentence_chi2_vectors(x, y, w2v_model, chi2_df):
     """
     This method computes sentence vectors given the word embedding (in w2v_model)
     Instead of just taking the average, we take a weighted average by the 
     chi2 value of every word in the vocabulary.
 
     chi2 value could be Nan, in this case just skip the word.
-    If a sentence doesn't have any valid word (either it is empty either its chi2 is Nan)
-    then just put a random vector? Or a zero vector or the average (now we compute the average on a random amount of words
+    If a sentence doesn't have any valid word (either it is empty either its words' chi2 is Nan)
+    then just put the average (now we compute the average on a random amount of words
     taken randomly from 1k sentences).
 
-    Hopefully, it doesn't happen too often
-
-    :param x: the series with sentences
-    :param y: the series with labels (must be converted into 0 1, not -1 1) and will be converted into categorical [0,1] [1,0]
-    :param word_vector_size: the size of the word embedding
+    :param x: pd.series with sentences
+    :param y: pd.series with labels (must be converted into 0 1, not -1 1) and will be converted into categorical [0,1] [1,0]
     :param w2v_model: the w2v model
     :param chi2_df: a dataframe which contains all the chi2 square values for each word
 
-    :return sentence_x: a vector representation for each sentence, in the same dimension of word_vector_size
-    :return sentence_y: the categorical labels for y
+    :return sentence_x: np.matrix of shape(len(x), embedding_size)
+    :return sentence_y: the categorical labels for y [0,1] or [1,0] 
     """
 
+    word_vector_size = w2v_model.wv.vectors.shape[1]
     counter_of_zero_sentences = 0     # This counts how many times we have an empty sentence.
     sentence_x = np.empty( (len(x), word_vector_size) )  ## Initialize of the right dimension.
     
@@ -229,13 +227,11 @@ def create_sentence_chi2_vectors(x, y, word_vector_size, w2v_model, chi2_df):
         for el in sent.split():
             word_set_avg.append(el)  # Create a long list of random words.
 
-    word_avg_mat = np.empty((len(word_set_avg), word_vector_size))  
+    word_avg_mat = np.empty((len(word_set_avg), word_vector_size))   # initialize an empty matrix 
     for i, el in enumerate(word_set_avg):
-        word_avg_mat[i] = w2v_model.wv[el]   # Create a matrix with the word embedding
+        word_avg_mat[i] = w2v_model.wv[el]   # Create the matrix with the word embeddings
 
-    avg_vector = np.mean(word_avg_mat, axis=0) # Take the mean over the columns of the matrix.
-    print("The average vector is")
-    print(avg_vector)  
+    avg_vector = np.mean(word_avg_mat, axis=0)   # Take the mean over the columns of the matrix.
     
     sentence_y = np.array(y)
 
@@ -245,6 +241,7 @@ def create_sentence_chi2_vectors(x, y, word_vector_size, w2v_model, chi2_df):
         tot_chi2 = 0
         for word in sent.split():
             if word in w2v_model.wv.vocab and word in chi2_df.index and not chi2_df.loc[word].isna()[0] :
+                # If the word is in the vocabulary, and has a valid chi2 value
                 sentence_vector += (w2v_model.wv[word] * chi2_df.loc[word][0])  # we scale the word vector by its chi2 value
                 words_in_vocabulary += 1
                 tot_chi2 += chi2_df.loc[word][0]
@@ -253,13 +250,13 @@ def create_sentence_chi2_vectors(x, y, word_vector_size, w2v_model, chi2_df):
             sentence_x[i] = np.array(sentence_vector / tot_chi2)   # Take the weighted average by the chi2
         else:
             counter_of_zero_sentences += 1  # This can happen both if the sentence has no words, or if the word has no chi2 value.
-            sentence_vector = avg_vector        # Now we take the average computed above.
-            sentence_x[i] = sentence_vector    # Take the average or a zero vector! must decide which is best
+            sentence_vector = avg_vector        # We take the average computed above.
+            sentence_x[i] = sentence_vector
     
     sentence_y = to_categorical(sentence_y)    # Convert to categorical
     
-    # print("the number of zero sentences (the sentences which have 0 words in our vocabulary) is {}".
-    #      format(counter_of_zero_sentences))
+    print("the number of zero sentences (the sentences which have 0 words in our vocabulary) is {}".
+         format(counter_of_zero_sentences))
     return sentence_x, sentence_y
 
 

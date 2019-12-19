@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -46,11 +44,11 @@ parser.add_argument('--np_sentences_train_y',
 
 parser.add_argument('--np_sentences_test_x',
                     required=False,
-                    help='numpy array test sentence embeddings')
+                    help='numpy array test sentence embeddings ()')
 
 parser.add_argument('--np_sentences_test_y',
                     required=False,
-                    help='numpy array test categorical labels')
+                    help='numpy array test categorical labels ()')
 
 parser.add_argument('--test_locally',
                     required=True,
@@ -107,7 +105,12 @@ if args.test_locally == '1':
     # We are just testing locally.
     # Therefore we create a callback to save the model whenever we improve the test 
     # accuracy.
-    checkpoint = ModelCheckpoint(filepath, monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
+    checkpoint = ModelCheckpoint(filepath, 
+                                monitor='val_accuracy',
+                                verbose=1,
+                                save_best_only=True,
+                                save_weights_only=True,
+                                mode='max')
     callbacks_list = [checkpoint]
 
     model.fit(x=sentence_train_x,
@@ -126,4 +129,4 @@ else:
                 use_multiprocessing=True,
                 batch_size=128)
     print("Save the model in {}".format(filepath))
-    model.save(filepath)
+    model.save_weights(filepath)
