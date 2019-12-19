@@ -10,3 +10,5 @@ Untitled*.ipynb
 *.csv
 *.h5
 *.json
+test_venv
+trained_models
