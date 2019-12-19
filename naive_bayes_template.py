@@ -10,23 +10,29 @@ from naive_bayes import naive_bayes_model, naive_bayes_predict
 from clean_helpers import *
 from data_handling import build_sentences
 
+from helpers import write
+
 sys.path.append('../')
 
 import argparse
 
-parser = argparse.ArgumentParser(description='')
+parser = argparse.ArgumentParser(description='It performs naive Bayes, when the test_locally flag' + 
+    "is set to zero, it will plot the accuracy graph for increasing length of ngrams. Otherwise, "+
+    "It will create the submission file.")
 
 parser.add_argument('--take_full',
-                    help='take full dataset of tweets')
+                    required=True,
+                    help='take full dataset of tweets (either 0 or 1)')
 parser.add_argument('--test_locally',
-                    help='Input file with negative tweets')
+                    required=True,
+                    help='Input file with negative tweets (either 0 or 1)')
 
 
 
 args = parser.parse_args()
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     # Specify here whether or not you want to consider the full dataset, and whether or not you want to test locally
     take_full = True if args.take_full == '1' else False
     test_locally = True if args.test_locally == '1' else False
@@ -35,7 +41,6 @@ if _name_ == "_main_":
     # Specify here what cleaning functions you want to use
     cleaning_options = ['clean_new_line', 'clean_tags', 'lowercase', \
                         'clean_punctuation', 'remove_stopwords', 'remove_numbers', 'lemmatize']
-
     clean = {
         "clean_new_line": clean_new_line,
         "lowercase": lowercase,
@@ -115,12 +120,11 @@ if _name_ == "_main_":
         accuracies = []
         n=11
 
-        for n in tqdm(range(1,n)):
-            model = naive_bayes_model(train['sentence'], train['label'], n)
+        for i in tqdm(range(1,n)):
+            model = naive_bayes_model(train['sentence'], train['label'], i)
             prediction = naive_bayes_predict(model, test['sentence'])
             accuracy = np.mean(np.where(prediction==test['label'],1,0))
             accuracies.append(accuracy)
-    
         plt.plot(np.arange(1,n), accuracies)
         plt.title('accuracy for naive Bayes for increasing maximum length of n-grams')
         plt.xlabel('n')
