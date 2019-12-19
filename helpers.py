@@ -79,9 +79,7 @@ def count_unique_words(df):
     """
     counts the number of unique words in the vocabulary
     """
-    df_list = df.sentence.apply(lambda x: x.split())
-    df_list_exploded = df_list.explode()
-    return len(df_list_exploded.unique())
+    return len((df['sentence'].apply(lambda x: x.split())).explode().unique())
 
 
 def count_unique_ngrams(df, n):
