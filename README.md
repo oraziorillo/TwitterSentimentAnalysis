@@ -28,6 +28,10 @@ and I had to stick to 1.16.4
 `pip install Pattern`
 `python -m textblob.download_corpora`
 
+# Naive Bayes 
+
+
+# Support Vector Machine
 
 # Cleaning primitives
 In order to clean the dataset we implemented some functions present in the file
