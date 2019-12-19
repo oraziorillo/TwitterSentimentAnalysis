@@ -238,3 +238,15 @@ def remove_ampersand(df):
         'sentence': df.sentence.apply(lambda x: " ".join(" ".join([el if re.search("^&", el) == None else "" for el in x.split()]).split()) ),  
         'label': df['label']
     })
+
+
+def clean_with_vocabulary_of_model(df, vocabulary):
+    """
+    Given a model, it returns all the words in every sentence which are present in the vocabulary of the model
+    :param df: the dataframe, with sentence and label column
+    :param vocabulary: the vocabulary of the words known to the model.
+    """
+    return pd.DataFrame({
+        'sentence': df.sentence.apply(lambda x: " ".join(" ".join([el if el in vocabulary else "" for el in x.split()]).split()) ),  
+        'label': df['label']
+    })

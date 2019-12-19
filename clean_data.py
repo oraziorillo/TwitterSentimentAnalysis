@@ -32,9 +32,12 @@ parser.add_argument('--clean_methods',
                         "lowercase, " + "lemmatize (textBlob one), remove_stopwords, " +
                         "clean_punctuation, clean_tags, remove_numbers, " +
                         "remove_saxon_genitive, gensim_simple, more_than_double_rep, " +
-                        "remove_@, remove_urls" 
-                        "lemmatize_spacy (better to use either this either textblob one, not both)",
+                        "remove_@, remove_urls, " 
+                        "lemmatize_spacy (better to use either this either textblob one, not both), ",
                     nargs='+')
+
+parser.add_argument('--model_word_embedding',
+                    help='name of the model to extract the vocabulary,  can either be w2v or glove')
 
 
 args = parser.parse_args()
@@ -101,6 +104,23 @@ for clean_option in cleaning_options:
     
 df.head()
 
+if args.model_word_embedding == 'w2v':
+    # load the w2v model
+    w2v_model = gensim.models.KeyedVectors.load_word2vec_format('models/GoogleNews-vectors-negative300.bin', binary=True)
+    vocabulary = w2v_model.wv.vocab
+else:
+    vocabulary = []
+    with open('glove/glove.twitter.27B.200d.txt') as f:
+        for line in f:
+            word, *vector = line.split()
+            vocabulary.append(word)
+        
+vocabulary = set(vocabulary)
+
+# Delete all words that are not present in the vocabulary of the model
+df = clean_with_vocabulary_of_model(df, vocabulary)
+
+print("unique words = {}".format(count_unique_words(df)))
 df.to_pickle(args.output_df_train)
 
 print("df pickle file correctly saved in {}".format(args.output_df_train))
