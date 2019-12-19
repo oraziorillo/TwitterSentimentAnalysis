@@ -32,6 +32,7 @@ Another incompatibility issue found is when running Keras Neural Nets on GPU or 
 - `pip install Pattern`
 - `python -m textblob.download_corpora`
 - `pip install argparse`
+- `pip install -q pyyaml h5py`
 
 # Cleaning primitives
 In order to clean the dataset we implemented some functions present in the file
@@ -142,8 +143,14 @@ The sentence representation vectors, then, are fed into a dense neural network w
 according to the training labels. We used cross validation in order to fine tune the hyperparameters of the neural network,
 although given the complexity and the required time to train every model for several epochs, we had to use just one train and test split.
 
-## Need to be converted to python
-You can run the classifier by running the notebook `word2vec_nn.ipynb`
+You can run the classifier by running the python module 
+`word2vec_nn.py` and following the instructions that are printed when inviking the `--help` argument. You can decide to pass the validation data, and in that case the model will automatically save whenever it increases its accuracy on the testing dataset (`--test_locally` must be set to 1), or you can set `--test_locally` to 0, and train the model on the entire training dataset, without providing the validation set. The model will be saved automatically at the end of the training.
+
+Empirically (using Cross Validation) we experienced best results for that method when building the neural network with 2 hidden layers of size 95, and training for 30 epochs. On *AICrowd* the best submission achieved 82%. This module can be used both with sentence embedding computed averaging the word vectors, either with the *chi2* weighted average.
+
+Finally, in order to create the submission file, just run 
+
+
 
 # Convolutional Neural Network
 
