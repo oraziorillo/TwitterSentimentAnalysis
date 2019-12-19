@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import argparse
 
-import gensim   # Not sure whether it is better to use gensim or tensorflow :/
+import gensim
 import logging
 from gensim.models.phrases import Phrases, Phraser
 
@@ -31,7 +31,7 @@ parser.add_argument("--window",
                     help="window of the word2vec model (better 5 for cbow or 10 for sg according to authors)")
 
 parser.add_argument('--epochs',
-                    help='The number of epochs the ',
+                    help='The number of epochs',
                     required=True)
 
 parser.add_argument('--output_model',
@@ -42,23 +42,23 @@ parser.add_argument('--output_model',
 
 args = parser.parse_args()
 
+# Read the training pickle
 df = pd.read_pickle(args.train_pickle)
 
 epochs = int(args.epochs)   # The number of epochs the word2vec model will be trained for.
-window = int(args.window)
-sg = int(args.sg)
+window = int(args.window)   # The context window size
+sg = int(args.sg)           # skip-gram? 1 or 0
 
 train_x = df['sentence']
 
-sentences = [row.split() for row in train_x]
+sentences = [row.split() for row in train_x]    # Create sentences as list of words
 len(sentences)
 
-word_vector_size = int(args.word_vector_size)   # should be among 100-1000
+word_vector_size = int(args.word_vector_size)   # should be among 100-1000 (we used 300)
 
-# logging.root.level = logging.ERROR   # Should reduce logging
-
+# Build the w2v_model
 w2v_model = Word2Vec(min_count=1,
-                     window=window,      # Advised by Authors when using skip-gram
+                     window=window,      
                      size=word_vector_size,
                      negative=5,
                      workers=4,

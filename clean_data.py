@@ -45,7 +45,9 @@ parser.add_argument('--clean_methods',
 parser.add_argument('--model_word_embedding',
                     required=False,
                     help='Name of the model to extract the vocabulary, can either be w2v or glove.'+
-                         ' If not provided, then all words are kept and no further cleaning is applied.')
+                         ' If not provided, then all words are kept and no further cleaning is applied. '+
+                         'Make sure you have the models for glove and word2vec in the following files: '+
+                         'models/glove.twitter.27B.200d.txt and models/GoogleNews-vectors-negative300.bin')
 
 
 args = parser.parse_args()
