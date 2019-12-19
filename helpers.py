@@ -262,3 +262,11 @@ def create_sentence_chi2_vectors(x, y, word_vector_size, w2v_model, chi2_df):
     #      format(counter_of_zero_sentences))
     return sentence_x, sentence_y
 
+
+def write(prediction, output_file):
+    pd.DataFrame({
+        "Id": range(1, len(prediction) + 1),
+        "Prediction": prediction        
+    }).to_csv(output_file, index=False)
+
+    

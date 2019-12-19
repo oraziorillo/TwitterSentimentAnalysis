@@ -25,7 +25,10 @@ parser.add_argument('--take_full',
                     help='take full dataset of tweets (either 0 or 1)')
 parser.add_argument('--test_locally',
                     required=True,
-                    help='Input file with negative tweets (either 0 or 1)')
+                    help='Either 0 or 1, if 1 it will create the submission csv file.')
+parser.add_argument('--output_file',
+                    required= False,
+                    help='The output file for the submission, OPTIONAL')
 
 
 
@@ -136,5 +139,5 @@ if __name__ == "__main__":
         prediction = naive_bayes_predict(model, test['sentence'])
         results = pd.DataFrame({'Id':range(1, len(prediction)+1), 'Prediction':prediction})
         results.to_csv('Submission.csv', index=False)
-        output_file = "output/output.csv"
+        output_file = args.output_file
         write(prediction, output_file)

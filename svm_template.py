@@ -12,20 +12,26 @@ from data_handling import build_sentences
 
 sys.path.append('../')
 
+from helpers import write
+
 import argparse
 
-parser = argparse.ArgumentParser(description='')
+parser = argparse.ArgumentParser(description='If test_locally is zero, the submission file is created')
 
 parser.add_argument('--take_full',
+                    required=True,
                     help='take full dataset of tweets')
 parser.add_argument('--test_locally',
-                    help='Input file with negative tweets')
-
+                    required=True,
+                    help='Either 0 or 1, if 1 it will create the submission csv file.')
+parser.add_argument('--output_file',
+                    required= False,
+                    help='The output file for the submission, OPTIONAL')
 
 
 args = parser.parse_args()
 
-if _name=="main_":
+if __name__=="__main__":
     # Specify here whether or not you want to consider the full dataset, and whether or not you want to test locally
     take_full = True if args.take_full == '1' else False
     test_locally = True if args.test_locally == '1' else False
@@ -117,10 +123,10 @@ if _name=="main_":
         print("the SVM yields an accuracy of "+str(accuracy))
     else:
         # Create a submission file
-        model = svm_model(train['sentence'], train['label'], 1)
+        model = svm_model(train['sentence'], train['label'])
         prediction = svm_predict(model, test['sentence'])
         results = pd.DataFrame({'Id':range(1, len(prediction)+1), 'Prediction':prediction})
         results.to_csv('Submission.csv', index=False)
-        output_file = "output/output.csv"
+        output_file = args.output_file
         write(prediction, output_file)
 
