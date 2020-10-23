@@ -166,6 +166,6 @@ The size of the matrix, therefore, remains to be decided: in fact, although one 
 
 
 # References
-- [1]: https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf
+- [1] https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf
 - [2] https://code.google.com/archive/p/word2vec/
 - [3] https://nlp.stanford.edu/projects/glove/
