@@ -77,7 +77,7 @@ and the resulting graph for the uni- and digrams only is:
 
 ![alt text](chi2_nb_di.png)
 
-The file also considers the chi2-test for SVM for unigrams only. The resulting graph will be
+The file also considers the chi2-test for SVM for unigrams only. The resulting graph will be:
 
 ![alt text](chi2_svm.png)
 
