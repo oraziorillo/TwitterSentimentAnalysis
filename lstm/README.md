@@ -44,7 +44,7 @@ Once you are done with this, we are ready to go.
    $ python3 train_model.py -i [ITERATIONS] -ep [EPOCHS]
    ```
 
-   and substitute _[ITERATIONS]_ with the number of trainings you want to perform and _[EPOCHS]_ with the number of epochs per iteration. There are also other options to personalize the training, that will be shown to you i you use the _-h_ option, but the default ones are the ones with which we got the best results so far. 
+   and substitute _[ITERATIONS]_ with the number of trainings you want to perform and _[EPOCHS]_ with the number of epochs per iteration. There are also other options to personalize the training, that will be shown to you if you use the _-h_ option, but the default ones are the ones with which we got the best results so far. 
 
 #### Predictions generation
 
