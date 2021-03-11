@@ -4,7 +4,7 @@ This is a Sentiment Analyzer based on a LSTM neural network able to predict whet
 
 #### Setup
 
-Before starting with the train open the folder _lstm_  and follow these steps to setup your environment
+Before starting with the training open the folder _lstm_  and follow these steps to setup your environment
 
 - ensure that you have a folder named _Data_ in which there are three datasets: 
 
