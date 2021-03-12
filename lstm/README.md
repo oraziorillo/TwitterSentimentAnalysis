@@ -21,7 +21,7 @@ Before starting with the training, open the folder _lstm_  and follow these step
 - open a terminal and run the command:
 
   ```{r, engine='bash', count_lines}
-  $ pip -r install requirements.txt
+  $ pip install -r requirements.txt
   ```
 
 #### Training
