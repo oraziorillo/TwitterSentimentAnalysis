@@ -3,7 +3,7 @@
 Below, you will find a description of what are the steps that we followed in our research of the best possible way of building and training the best sentiment classifier possible on a public dataset of tweets from the known social network Twitter. The best results were obtained with an lstm whose code and instuctions can be found in the folder _lstm_.   
 
 ## Installation setup
-in order to work properly, you need to install the following libraries.
+in order to use the code in this folder, you need to install the following libraries.
 
 - `conda install nltk gensim spacy`
 - `pip install pyLDAvis`    Not used actually
