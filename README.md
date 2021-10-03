@@ -1,12 +1,9 @@
 # TwitterSentimentAnalysis
 
+Below, you will find a description of what are the steps that we followed in our research of the best possible way of building and training the best sentiment classifier possible on a public dataset of tweets from the known social network Twitter. The best results were obtained with an lstm whose code and instuctions can be found in the folder _lstm_.   
+
 ## Installation setup
 in order to work properly, you need to install the following libraries.
-
-Don't know why, sometimes there are warning of retrocompatibility when installing numpy 1.17
-and we had to stick to 1.16.4. But it is not always true, therefore it is probably due to tensowflow-gpu library having different dependencies.
-
-Another incompatibility issue found is when running Keras Neural Nets on GPU or on CPU: unexplainably, the checkpoint for the neural net on the test error can either be called `val_acc` (GPU) or `validation_accuracy` (CPU), with no particural reason. Probably it is again due to the installation of different versions of `tensorflow` or `tensorflow-gpu`. 
 
 - `conda install nltk gensim spacy`
 - `pip install pyLDAvis`    Not used actually
