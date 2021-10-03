@@ -150,8 +150,7 @@ You can run the classifier by running the python module
 
 Empirically (using Cross Validation) we experienced best results for that method when building the neural network with 2 hidden layers of size 95, and training for 30 epochs. On *AICrowd* the best submission achieved 82%. This module can be used both with sentence embedding computed averaging the word vectors, either with the *chi2* weighted average.
 
-Finally, in order to create the submission file, just run 
-
+Finally, in order to create the submission file, just run the generate_submission.py script.
 
 
 # Convolutional Neural Network
