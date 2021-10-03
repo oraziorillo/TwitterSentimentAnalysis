@@ -2,6 +2,8 @@
 
 Below, you will find a description of what are the steps that we followed in our research of the best possible way of building and training the best sentiment classifier possible on a public dataset of tweets from the known social network Twitter. The best results were obtained with an lstm whose code and instuctions can be found in the folder _lstm_.   
 
+To have more formal and detailed information on the project in general, the methods we used and our results, refer to the report in the ```docs``` folder. 
+
 ## Installation setup
 in order to use the code in this folder, you need to install the following libraries.
 
